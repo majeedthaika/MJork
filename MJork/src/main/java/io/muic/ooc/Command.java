@@ -1,33 +1,47 @@
 package io.muic.ooc;
 
-import java.util.ArrayList;
-import java.util.StringTokenizer;
+import java.util.List;
+import java.util.Set;
 
 public class Command {
     private String mainCommand;
-    private ArrayList<String> cmdScenario;
-    private int cmdLength;
+    private Set<String> cmdScenario;
 
-    public Command(String mainWord, ArrayList<String> otherWords, int length){
-        if (length > 0) {
-            this.mainCommand = mainWord;
-            this.cmdScenario = otherWords;
-            this.cmdLength = length;
-        } else {
-            System.out.println("Nonempty command must be given.");
-        }
+    public Command(String mainWord, Set<String> otherWords){
+        try {
+            if (!mainWord.isEmpty()) {
+                this.mainCommand = mainWord;
+                this.cmdScenario = otherWords;
+            } else {
+                System.out.println("Non-empty command must be given.\n");
+            }
+        } catch (Exception ex) {}
+
     }
 
     public String getMainCommand() {
         return mainCommand;
     }
 
-    public int getCmdLength() {
-        return cmdLength;
+    public boolean isValid() {
+        return null != mainCommand;
     }
 
-    public String getCmdScenario(int index) {
-        if (index < cmdLength) return cmdScenario.get(index);
-        else return "";
+    public NPC isNPCInCommand(List<NPC> possibleCharacters) {
+        for (NPC nextCand : possibleCharacters) {
+            if (cmdScenario.contains(nextCand.toString())) {
+                return nextCand;
+            }
+        }
+        return null;
+    }
+
+    public String isRoomInCommand(List<String> possibleCharacters) {
+        for (String nextCand : possibleCharacters) {
+            if (cmdScenario.contains(nextCand.toString())) {
+                return nextCand;
+            }
+        }
+        return null;
     }
 }

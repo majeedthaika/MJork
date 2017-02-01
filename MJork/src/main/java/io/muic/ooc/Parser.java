@@ -5,8 +5,10 @@ import java.util.*;
 public class Parser {
     private CommandWords commands = null;
     private final static int MAX_CMD_LENGTH = 4;
+    private Scanner cin;
 
     public Parser() {
+        cin = new Scanner(System.in);
     }
 
     public void setCommandWords(List<String> roomCommands) {
@@ -15,15 +17,15 @@ public class Parser {
 
     public Command getNextCommand() {
 
-        System.out.print("> ");
+        System.out.print(">>> ");
 
-        Scanner cin = new Scanner(System.in);
         String inputLine = cin.nextLine();
+        System.out.println("");
+
         StringTokenizer tokenizer = new StringTokenizer(inputLine);
-        cin.close();
 
         StringBuilder mainWord = new StringBuilder();
-        ArrayList<String> otherWords = new ArrayList<String>();
+        Set<String> otherWords = new HashSet<String>();
         int cmdLength = 0;
 
         while (tokenizer.hasMoreTokens() && cmdLength < MAX_CMD_LENGTH){
@@ -35,7 +37,7 @@ public class Parser {
             cmdLength += 1;
         }
 
-        return new Command(mainWord.toString(), otherWords, cmdLength);
+        return new Command(mainWord.toString(), otherWords);
     }
 
     public void showValidCommands(){

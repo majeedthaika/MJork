@@ -2,23 +2,42 @@ package io.muic.ooc;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
 
-public class NPC {
+public abstract class NPC {
     String name;
-    String hello;
-    String asciiImagePath;
+    List<String> image;
 
+    public NPC(String name, String asciiImagePath) {
+        this.name = name;
+        this.image = loadImageFromPath(asciiImagePath);
+    }
 
-    public void printImage() {
+    private List<String> loadImageFromPath(String path) {
+        List<String> asciiImage = new ArrayList<String>();
         try {
-            BufferedReader br = new BufferedReader(new FileReader(asciiImagePath));
-//            BufferedReader br = new BufferedReader(new FileReader("src/assets/mom.txt"));
+            BufferedReader br = new BufferedReader(new FileReader(path));
             String line = null;
             while ((line = br.readLine()) != null) {
-                System.out.println(line);
+                asciiImage.add(line);
             }
-        } catch (Exception ex) {
-            System.out.println(ex);
+        } catch (Exception ex) {}
+        return asciiImage;
+    }
+
+    protected void printImage() {
+        for (String imgLine : image){
+            System.out.println(imgLine);
         }
+    }
+
+    public abstract void setCurrentResponse(int option);
+
+    public abstract void talk();
+
+        @Override
+    public String toString() {
+        return name;
     }
 }

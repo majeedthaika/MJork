@@ -5,6 +5,10 @@ import java.util.HashMap;
 public class Items {
     private HashMap<String, Item> items;
 
+    public Items() {
+        this.items = new HashMap<String, Item>();
+    }
+
     public int size() {
         return items.size();
     }

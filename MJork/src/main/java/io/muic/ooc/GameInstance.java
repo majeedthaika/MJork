@@ -3,23 +3,32 @@ package io.muic.ooc;
 import com.diogonunes.jcdp.color.ColoredPrinter;
 import com.diogonunes.jcdp.color.api.Ansi.*;
 import com.google.common.collect.ImmutableMap;
+import io.muic.ooc.characters.*;
+import io.muic.ooc.commands.*;
+import io.muic.ooc.location.*;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class GameInstance {
     private Parser parser;
     private Room currentRoom;
     private List<Room> roomHistory;
     private HashMap<String, Room> allRooms;
+    private HashMap<String, NPC> allCharacters;
     private Backpack playerItems;
 
+    public Player player;
+    public HelpCommand help;
+
     public GameInstance() {
+        player = new Player();
         playerItems = new Backpack(6);
+        player.setBackpack(playerItems);
+        help = new HelpCommand();
+        parser = new Parser();
+        createNPCs();
         buildRooms();
     }
 
@@ -32,33 +41,80 @@ public class GameInstance {
         cp.println("");
         cp.print("You have woken up from deep sleep...", Attribute.BOLD, FColor.WHITE, BColor.RED);
         cp.clear();
-        cp.println("\n\n");
+        cp.println("\n");
 
-        cp.print("Go talk to your ");
-        cp.print("mom", Attribute.CLEAR, FColor.CYAN, BColor.BLACK);
-        cp.println(" before you head out anywhere!");
+        setCurrentRoom("home0");
+        currentRoom.printRoomMessage();
 
-        cp.print("Type ");
-        cp.print("help", Attribute.CLEAR, FColor.YELLOW, BColor.BLACK);
-        cp.println(" for help with game commands.");
+        outerloop:
+        while (true) {
+            Command nextCmd = parser.getNextCommand();
 
-        cp.clear();
+            if (!nextCmd.isValid()) continue;
 
-        currentRoom = allRooms.get("Home");
-        System.out.println(currentRoom.getCharacterProbabilities());
-        parser.getNextCommand();
+            switch (nextCmd.getMainCommand()) {
+                case "help":
+                    help.setPossibleOptions(currentRoom.getPossibleCommandList(),currentRoom.getConnectedRooms());
+                    help.printHelpMessage();
+                    break;
+                case "look":
+                    currentRoom.printRoomMessage();
+                    break;
+                case "talk":
+                    List<NPC> possibleCharacters = currentRoom.getCharacters();
+                    NPC targetNPC = nextCmd.isNPCInCommand(possibleCharacters);
+                    if (null != targetNPC) targetNPC.talk();
+                    else cp.println("No valid character provided.");
+                    break;
+                case "go":
+                    List<String> possibleRooms = currentRoom.getConnectedRooms();
+                    String targetRoom = nextCmd.isRoomInCommand(possibleRooms);
+                    if (null != targetRoom) {
+                        cp.println(targetRoom);
+                    }
+                    else cp.println("Valid location not provided.");
+                    break;
+                case "info":
+                    player.printPlayerInfo();
+                    break;
+                case "quit":
+                    break outerloop;
+                default:
+                    cp.println("Input isn't a valid command in current situation.\n");
+            }
+        }
+    }
+
+    public void setCurrentRoom(String roomCandidate) {
+        currentRoom = allRooms.get(roomCandidate);
+        parser.setCommandWords(currentRoom.getPossibleCommandList());
     }
 
     public void buildRooms(){
         allRooms = new HashMap<String, Room>();
 
-        allRooms.put("Home",
-                new Room("Home",
-                        Arrays.asList("help", "talk"),
-                        null,
-                        ImmutableMap.<String, Double>builder()
-                                .put("Mom", 1.0)
+        allRooms.put("home0",
+                new Home(0,
+                        Arrays.asList("help", "info", "look", "go", "talk", "quit"),
+                        Arrays.asList("muic"),
+                        ImmutableMap.<NPC, Double>builder()
+                                .put(allCharacters.get("mom0"), 1.0)
                                 .build()
-                        ));
+                ));
+
+//        allRooms.put("muic0",
+//                new MUIC(0,
+//                        Arrays.asList("help", "info", "look", "go", "talk", "quit"),
+//                        Arrays.asList("auditorium"),
+//                        ImmutableMap.<NPC, Double>builder()
+//                                .put(allCharacters.get("bossy0"), 1.0)
+//                                .build()
+//                ));
+    }
+
+    public void createNPCs(){
+        allCharacters = new HashMap<String, NPC>();
+
+        allCharacters.put("mom0", new Mom(0));
     }
 }
