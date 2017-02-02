@@ -9,11 +9,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class MUIC extends Room {
+public class CS1409 extends Room {
     private int state;
     List<String> currentResponse;
 
-    public MUIC(int state, List<String> possibleCommandList, List<String> connectedRooms, Map<NPC, Double> characterProbabilities) {
+    public CS1409(int state, List<String> possibleCommandList, List<String> connectedRooms, Map<NPC, Double> characterProbabilities) {
         super("muic", possibleCommandList, connectedRooms, characterProbabilities);
         setState(state);
     }
@@ -31,9 +31,9 @@ public class MUIC extends Room {
         switch (option) {
             case 0:
                 currentResponse = new ArrayList<String>();
-                currentResponse.add("You're at the muic lobby");
-                if (isCharacterInRoom("bossy")) {
-                    currentResponse.add("You see a confused guy named <bossy<.");
+                currentResponse.add("You're at the cs lab 1409.");
+                if (isCharacterInRoom("tow")) {
+                    currentResponse.add(" <tow<.");
                 }
                 break;
             default:
@@ -48,10 +48,10 @@ public class MUIC extends Room {
                     if (character.getState() == 1) setCharacterProbability(character, 0.4);
                     break;
                 case "pj":
-                    if (character.getState() == 1) setCharacterProbability(character, 0.1);
+                    if (character.getState() == 1) setCharacterProbability(character, 0.2);
                     break;
                 case "tow":
-                    if (character.getState() == 1) setCharacterProbability(character, 0.1);
+                    if (character.getState() == 1) setCharacterProbability(character, 0.7);
                     break;
             }
         }

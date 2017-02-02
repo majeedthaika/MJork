@@ -9,11 +9,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class MUIC extends Room {
+public class Canteen extends Room {
     private int state;
     List<String> currentResponse;
 
-    public MUIC(int state, List<String> possibleCommandList, List<String> connectedRooms, Map<NPC, Double> characterProbabilities) {
+    public Canteen(int state, List<String> possibleCommandList, List<String> connectedRooms, Map<NPC, Double> characterProbabilities) {
         super("muic", possibleCommandList, connectedRooms, characterProbabilities);
         setState(state);
     }
@@ -36,6 +36,8 @@ public class MUIC extends Room {
                     currentResponse.add("You see a confused guy named <bossy<.");
                 }
                 break;
+            case 1:
+                break;
             default:
                 currentResponse = Arrays.asList("This location is weird...");
         }
@@ -48,7 +50,7 @@ public class MUIC extends Room {
                     if (character.getState() == 1) setCharacterProbability(character, 0.4);
                     break;
                 case "pj":
-                    if (character.getState() == 1) setCharacterProbability(character, 0.1);
+                    if (character.getState() == 1) setCharacterProbability(character, 0.2);
                     break;
                 case "tow":
                     if (character.getState() == 1) setCharacterProbability(character, 0.1);

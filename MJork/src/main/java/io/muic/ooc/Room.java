@@ -1,12 +1,6 @@
 package io.muic.ooc;
 
-import com.diogonunes.jcdp.color.ColoredPrinter;
-import com.diogonunes.jcdp.color.api.Ansi;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public abstract class Room {
     private String roomName;
@@ -47,6 +41,24 @@ public abstract class Room {
         return characters;
     }
 
+    public boolean isCharacterInRoom(String name){
+        for (NPC nextCand : characters) {
+            if (nextCand.getName().equals(name)) return true;
+        }
+        return false;
+    }
+
+    public NPC getCharacter(String name){
+        for (NPC nextCand : characters) {
+            if (nextCand.getName().equals(name)) return nextCand;
+        }
+        return null;
+    }
+
+    public void removeCharacter(NPC target) {
+        characters.remove(target);
+    }
+
     public Map<NPC, Double> getCharacterProbabilities() {
         return characterProbabilities;
     }
@@ -54,6 +66,8 @@ public abstract class Room {
     public void setCharacterProbability(NPC person, Double newProb) {
         this.characterProbabilities.put(person,newProb);
     }
+
+    public abstract void updateRoom();
 
     public abstract void setRoomMessage(int option);
 

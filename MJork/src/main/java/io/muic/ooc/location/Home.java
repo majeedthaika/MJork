@@ -4,6 +4,7 @@ import io.muic.ooc.ConsolePrinter;
 import io.muic.ooc.NPC;
 import io.muic.ooc.Room;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -29,16 +30,21 @@ public class Home extends Room {
     public void setRoomMessage(int option) {
         switch (option) {
             case 0:
-                currentResponse = Arrays.asList("Go #talk# to your <mom< before you head out anywhere.",
-                        "Type #help# to see possible game commands...");
+                currentResponse = new ArrayList<String>();
+                if (isCharacterInRoom("mom")) {
+                    currentResponse.add("Go #talk# to your <mom< before you head out anywhere.");
+                }
+                currentResponse.add("Type #help# to see possible game commands...");
                 break;
             default:
                 currentResponse = Arrays.asList("This location is weird...");
         }
     }
 
-    public void printRoomMessage(){
-        ConsolePrinter.printWithColor(Arrays.asList("Current Location: <home<"));
+    public void printRoomMessage() {
+        setRoomMessage(state);
+        ConsolePrinter.printWithColor(Arrays.asList("Current Location: <"+getRoomName()+"<"));
         ConsolePrinter.printWithColor(currentResponse);
+        if (getState() == 0) setState(1);
     }
 }

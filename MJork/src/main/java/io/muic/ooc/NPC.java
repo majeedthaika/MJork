@@ -26,6 +26,10 @@ public abstract class NPC {
         return asciiImage;
     }
 
+    public String getName() {
+        return name;
+    }
+
     protected void printImage() {
         for (String imgLine : image){
             System.out.println(imgLine);
@@ -35,6 +39,10 @@ public abstract class NPC {
     public abstract void setCurrentResponse(int option);
 
     public abstract void talk();
+
+    public abstract int getState();
+
+    public abstract void setState(int state);
 
         @Override
     public String toString() {
