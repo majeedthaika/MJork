@@ -22,3 +22,10 @@ Possible locations that you can visit:
 
 Possible items:
 >Car, DotaGameAccount, Calculator, Chappati, CheatSheet, ChickyChic, MacBook
+
+Player Info:
+currentLevel -> Current level: [currentLevel = sqrt(studyExp + socialExp)/5 - 1] -> level used for energy calculation
+studyExp -> Current Study exp: [capped at 2 * socialExp] -> when you go to lecture/do homework/revise
+socialExp -> Current Social exp: [capped at 2 * studyExp] -> when you interact/play with others
+preparedness -> How prepared are you for next Exam: on scale of 10 -> how prepared you are for each exam
+energy -> Current Energy: [energyCap = 2 * currLevel + 5] -> your energy for each day
