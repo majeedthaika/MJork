@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 public class Mom extends NPC {
     public Mom() {
-        super("mom", "src/assets/mom", 0);
+        super("mom", 0);
     }
 
     public Item updateCurrentResponse() {
@@ -19,7 +19,7 @@ public class Mom extends NPC {
             case 1:
                 double respProb = super.RANDOM.nextDouble();
                 if (respProb < 0.1) {
-                    gift = new Chappati();
+                    gift = new Chappati("chappati", null);
                     currentResponse = Arrays.asList("Beta, #take# this <chappati< and eat it when you're hungry!");
                 } else if (respProb < 0.4) {
                     currentResponse = Arrays.asList("Sigh... it get lonely being at <home< all the time...");

@@ -13,150 +13,106 @@ import java.util.HashMap;
 import java.util.List;
 
 public class GameInstance {
+    public Player player;
     private Parser parser;
-    private Room currentRoom;
-    private List<Room> roomHistory;
     private HashMap<String, Room> allRooms;
     private HashMap<String, NPC> allCharacters;
-    private Backpack playerItems;
-
-    public Player player;
-    public HelpCommand help;
 
     public GameInstance() {
-        player = new Player();
-        playerItems = new Backpack(6);
-        player.setBackpack(playerItems);
-        help = new HelpCommand();
-        parser = new Parser();
         createNPCs();
         buildRooms();
+        player = new Player();
+        parser = new Parser(player, this);
     }
 
     public void start() {
-        ColoredPrinter cp = new ColoredPrinter.Builder(1,false).build();
 
-        cp.println("\033\143");
-        cp.println("Welcome to MUIC 568 CS Game!!!", Attribute.BOLD, FColor.RED, BColor.WHITE);
-        cp.clear();
-        cp.println("");
-        cp.print("You have woken up from deep sleep...", Attribute.BOLD, FColor.WHITE, BColor.RED);
-        cp.clear();
-        cp.println("\n");
+        ConsolePrinter.printStartMessage();
+        player.setCurrentRoom(getRoomFromName("home"));
+        player.getCurrentRoom().printRoomMessage();
 
-        setCurrentRoom("home");
-        currentRoom.printRoomMessage();
-
-        outerloop:
         while (true) {
             Command nextCmd = parser.getNextCommand();
-
-            if (!nextCmd.isValid()) continue;
-
-            switch (nextCmd.getMainCommand()) {
-                case "help":
-                    help.setPossibleOptions(currentRoom.getPossibleCommandList(),
-                                            currentRoom.getConnectedRooms(),
-                                            currentRoom.getCharacters());
-                    help.printHelpMessage();
-                    break;
-                case "look":
-                    currentRoom.printRoomMessage();
-                    break;
-                case "talk":
-                    List<NPC> possibleCharacters = currentRoom.getCharacters();
-                    NPC targetNPC = nextCmd.isNPCInCommand(possibleCharacters);
-                    if (null != targetNPC) {
-                        targetNPC.talk();
-                        currentRoom.removeCharacter(targetNPC);
-                        player.increaseSocialExp(targetNPC.getState()*50);
-                    }
-                    else cp.println("No valid character provided.");
-                    break;
-                case "go":
-                    List<String> possibleRooms = currentRoom.getConnectedRooms();
-                    String targetRoom = nextCmd.isRoomInCommand(possibleRooms);
-                    if (null != targetRoom) {
-                        setCurrentRoom(targetRoom);
-                        currentRoom.printRoomMessage();
-                    } else cp.println("Valid location not provided.");
-                    break;
-                case "info":
-                    player.printPlayerInfo();
-                    break;
-                case "quit":
-                    break outerloop;
-                default:
-                    cp.println("Input isn't a valid command in current situation.\n");
-            }
+            if (null == nextCmd) System.out.println("Command isn't a valid command!!!\n");
+            else if (!player.getCurrentRoom().isCommandInRoom(nextCmd)) System.out.println("Command isn't a valid in this location!\n");
+            else nextCmd.run();
         }
-    }
-
-    public void setCurrentRoom(String roomCandidate) {
-        currentRoom = allRooms.get(roomCandidate);
-        parser.setCommandWords(currentRoom.getPossibleCommandList());
     }
 
     public void buildRooms(){
         allRooms = new HashMap<String, Room>();
 
         allRooms.put("home",
-                new Home(0,
-                        Arrays.asList("help", "info", "look", "go", "talk", "quit", "take"),
-                        Arrays.asList("muic"),
-                        ImmutableMap.<NPC, Double>builder()
+                new Home(Arrays.asList("help", "info", "look", "go", "talk", "quit", "take"),
+                         Arrays.asList("muic"),
+                         allCharacters.get("mom"),
+                         ImmutableMap.<NPC, Double>builder()
                                 .put(allCharacters.get("mom"), 1.0)
                                 .build()
                 ));
 
         allRooms.put("muic",
-                new MUIC(0,
-                        Arrays.asList("help", "info", "look", "go", "talk", "quit"),
-                        Arrays.asList("1408", "1409", "lecture", "canteen", "home"),
-                        ImmutableMap.<NPC, Double>builder()
-                                .put(allCharacters.get("bossy"), 1.0)
-                                .put(allCharacters.get("tow"), 0.0)
-                                .put(allCharacters.get("pj"), 0.0)
+                new MUIC(Arrays.asList("help", "info", "look", "go", "talk", "quit"),
+                         Arrays.asList("1408", "1409", "lecture", "canteen", "home"),
+                         allCharacters.get("bossy"),
+                         ImmutableMap.<NPC, Double>builder()
+                                .put(allCharacters.get("bossy"), 0.4)
+                                .put(allCharacters.get("tow"), 0.1)
+                                .put(allCharacters.get("pj"), 0.1)
                                 .build()
                 ));
 
         allRooms.put("1408",
-                new MUIC(0,
-                        Arrays.asList("help", "info", "look", "go", "talk", "quit", "take"),
-                        Arrays.asList("1408", "1409", "lecture", "canteen", "home"),
-                        ImmutableMap.<NPC, Double>builder()
-                                .put(allCharacters.get("bossy"), 0.0)
-                                .put(allCharacters.get("tow"), 1.0)
-                                .put(allCharacters.get("pj"), 0.0)
-                                .build()
-                ));
-
-        allRooms.put("1409",
-                new MUIC(0,
-                        Arrays.asList("help", "info", "look", "go", "talk", "quit", "take"),
-                        Arrays.asList("1408", "1409", "lecture", "canteen", "home"),
-                        ImmutableMap.<NPC, Double>builder()
+                new CS1408(Arrays.asList("help", "info", "look", "go", "talk", "quit", "take"),
+                         Arrays.asList("1408", "1409", "lecture", "canteen", "home"),
+                         allCharacters.get("pj"),
+                         ImmutableMap.<NPC, Double>builder()
                                 .put(allCharacters.get("bossy"), 0.0)
                                 .put(allCharacters.get("tow"), 0.0)
                                 .put(allCharacters.get("pj"), 1.0)
                                 .build()
                 ));
 
+        allRooms.put("1409",
+                new CS1409(Arrays.asList("help", "info", "look", "go", "talk", "quit", "take"),
+                         Arrays.asList("1408", "1409", "lecture", "canteen", "home"),
+                         allCharacters.get("tow"),
+                         ImmutableMap.<NPC, Double>builder()
+                                .put(allCharacters.get("bossy"), 0.0)
+                                .put(allCharacters.get("tow"), 1.0)
+                                .put(allCharacters.get("pj"), 0.0)
+                                .build()
+                ));
+
         allRooms.put("canteen",
-                new MUIC(0,
-                        Arrays.asList("help", "info", "look", "go", "talk", "quit", "buy"),
-                        Arrays.asList("1408", "1409", "lecture", "canteen", "home"),
-                        ImmutableMap.<NPC, Double>builder()
+                new Canteen(Arrays.asList("help", "info", "look", "go", "talk", "quit", "buy"),
+                         Arrays.asList("1408", "1409", "lecture", "canteen", "home"),
+                        null,
+                         ImmutableMap.<NPC, Double>builder()
+                                .put(allCharacters.get("bossy"), 0.0)
+                                .put(allCharacters.get("tow"), 0.0)
+                                .put(allCharacters.get("pj"), 1.0)
                                 .build()
                 ));
 
         allRooms.put("lecture",
-                new MUIC(0,
-                        Arrays.asList("help", "info", "look", "go", "talk", "quit", "learn", "take"),
-                        Arrays.asList("1408", "1409", "lecture", "canteen", "home"),
-                        ImmutableMap.<NPC, Double>builder()
+                new Lecture(Arrays.asList("help", "info", "look", "go", "talk", "quit", "learn", "take"),
+                         Arrays.asList("1408", "1409", "lecture", "canteen", "home"),
+                         null,
+                         ImmutableMap.<NPC, Double>builder()
+                                .put(allCharacters.get("bossy"), 0.3)
+                                .put(allCharacters.get("tow"), 0.3)
+                                .put(allCharacters.get("pj"), 0.2)
                                 .build()
                 ));
+    }
+
+    public Room getRoomFromName(String roomName) {
+        return allRooms.get(roomName);
+    }
+
+    public HashMap<String, Room> getAllRooms() {
+        return allRooms;
     }
 
     public void createNPCs(){

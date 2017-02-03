@@ -8,28 +8,15 @@ import java.util.List;
 import java.util.Map;
 
 public class Canteen extends Room {
-
-    public Canteen(int state, List<String> possibleCommandList, List<String> connectedRooms, Map<NPC, Double> characterProbabilities) {
-        super("muic", possibleCommandList, connectedRooms, characterProbabilities, 0);
+    public Canteen(List<String> possibleCommandList, List<String> connectedRooms, NPC startingCharacter, Map<NPC, Double> characterProbabilities) {
+        super("canteen", possibleCommandList, connectedRooms, startingCharacter, characterProbabilities);
     }
 
     public void updateCurrentMessage() {
         switch (getState()) {
-            case 0:
-                currentMessage = new ArrayList<String>();
-                currentMessage.add("You're at the muic lobby");
-                if (isCharacterInRoom("bossy")) {
-                    currentMessage.add("You see a confused guy named <bossy<.");
-                }
-                break;
-            case 1:
-                break;
-            default:
-                currentMessage = Arrays.asList("This location is weird...");
+            case 0: currentMessage = Arrays.asList("This is where you can buy <chickychic<"); break;
+            case 1: currentMessage = Arrays.asList("Have you tried <chickychic< yet?"); break;
+            default: currentMessage = Arrays.asList("This location is weird...");
         }
-    }
-
-    public void updateRoom() {
-        super.updateRoom();
     }
 }

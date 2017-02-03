@@ -1,6 +1,6 @@
 You are an incoming 568 freshman coming into the CS Department in MUIC.
 
-You must battle the frightening monsters (Ajarns) in their lairs ('fun' classes) on your way to the ultimate treasure (graduation). You can interact with fun NPCs (like P'Tow and Bossy), and choose your own path. Your score is given by your cGPA.
+You must battle the frightening monsters (Ajarns) in their lairs ('fun' classes) on your way to the ultimate treasure (graduation). You can interact with fun NPCs (like P'Tow and Bossy) and get helpful items for them on the way to conquering the university. Your final score is given by your cGPA (don't forget to improve both your social and study experience).
 
 (Year 1):
 <Lvl 1>

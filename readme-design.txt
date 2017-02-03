@@ -1,5 +1,7 @@
 I created abstract classes Item, Room, and NPC - each of them are inherited by several subclasses, this is done to avoid repetition and to loosen coupling. I chose not to implement Abstract Factories because I only wanted one instance of each subclass.
 
+I used Command pattern for my Command class and subclasses.
+
 I used Facade design pattern to start the game. All the client needs to do is create a new instance of GameInstance and run the start() method. This hides the complex bits of the code from the client, and instead provides a simple wrapper that doesn't need to pass in any parameters.
 
 I use the Iterator pattern with my Items class - which essentially is a Map from itemName -> Item object, but this hides the hashmap functions from the coder, and allows them to access it with simple functions and parameters.

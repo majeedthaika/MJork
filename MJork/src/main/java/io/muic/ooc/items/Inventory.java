@@ -57,7 +57,7 @@ public abstract class Inventory {
     }
 
     public void useItem(String itemName) {
-        if (items.contains(itemName)) items.get(itemName).use();
+//        if (items.contains(itemName)) items.get(itemName).use();
 //        else System.out.println("You do not have a " + itemName + ".");
     }
 }

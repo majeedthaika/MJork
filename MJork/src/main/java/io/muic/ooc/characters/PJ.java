@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 public class PJ extends NPC {
     public PJ() {
-        super("pj", "src/assets/pj", 0);
+        super("pj", 0);
     }
 
     public Item updateCurrentResponse() {
@@ -21,9 +21,9 @@ public class PJ extends NPC {
                 if (respProb < 0.1) {
                     currentResponse = Arrays.asList("Hey man, you can #use# my <car< anytime as thanks for all your help.",
                                                          "It will save you #energy# to travel to <muic<.");
-                    gift = new Car();
+                    gift = new Car("car", null);
                 } else if (respProb < 0.4) {
-                    currentResponse = Arrays.asList("Yo dude, you can usually find me dying in <1409<.");
+                    currentResponse = Arrays.asList("Yo dude, you can usually find me dying in <1408<.");
                 } else {
                     currentResponse = Arrays.asList("You know what's weird... Blah blah blah");
                 }

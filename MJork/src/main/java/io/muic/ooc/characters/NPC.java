@@ -3,9 +3,11 @@ package io.muic.ooc.characters;
 import io.muic.ooc.ConsolePrinter;
 import io.muic.ooc.location.Room;
 import io.muic.ooc.items.Item;
+import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -18,21 +20,25 @@ public abstract class NPC {
     protected List<String> currentResponse;
     protected static final Random RANDOM = new Random();
 
-    public NPC(String name, String asciiImagePath, int state) {
+    public NPC(String name, int state) {
         this.name = name;
-        this.image = loadImageFromPath(asciiImagePath);
+        this.image = loadImageFromPath(name);
         this.state = state;
     }
 
     private List<String> loadImageFromPath(String path) {
         List<String> asciiImage = new ArrayList<String>();
+        BufferedReader br = null;
         try {
-            BufferedReader br = new BufferedReader(new FileReader(path));
+            br = new BufferedReader(new InputStreamReader(NPC.class.getResourceAsStream(path)));
             String line = null;
             while ((line = br.readLine()) != null) {
                 asciiImage.add(line);
             }
         } catch (Exception ex) {}
+        finally {
+            IOUtils.closeQuietly(br);
+        }
         return asciiImage;
     }
 
@@ -44,6 +50,10 @@ public abstract class NPC {
         for (String imgLine : image){
             System.out.println(imgLine);
         }
+    }
+
+    public List<String> getCurrentResponse() {
+        return currentResponse;
     }
 
     public Room getCurrentRoom() {

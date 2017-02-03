@@ -2,6 +2,7 @@ package io.muic.ooc.location;
 
 import io.muic.ooc.ConsolePrinter;
 import io.muic.ooc.characters.NPC;
+import io.muic.ooc.commands.Command;
 import io.muic.ooc.items.Inventory;
 import io.muic.ooc.items.Item;
 import io.muic.ooc.items.RoomInventory;
@@ -15,17 +16,19 @@ public abstract class Room {
     private List<NPC> characters;
     private Inventory items;
     private Map<NPC,Double> characterProbabilities;
+    private NPC startingCharacter;
     protected int state;
     protected List<String> currentMessage;
     protected static final Random RANDOM = new Random();
 
     public Room(String roomName, List<String> possibleCommandList, List<String> connectedRooms,
-                Map<NPC, Double> characterProbabilities, int state) {
+                NPC startingCharacter, Map<NPC, Double> characterProbabilities) {
         this.roomName = roomName;
         this.possibleCommandList = possibleCommandList;
         this.connectedRooms = connectedRooms;
         this.characterProbabilities = characterProbabilities;
-        this.state = state;
+        this.startingCharacter = startingCharacter;
+        this.state = 0;
         updateRoom();
     }
 
@@ -46,11 +49,22 @@ public abstract class Room {
         return possibleCommandList;
     }
 
+    public boolean isCommandInRoom(Command cmd){
+        for (String cand : possibleCommandList) {
+            if (cand.equals(cmd.getMainCommand())) return true;
+        }
+        return false;
+    }
+
     public List<String> getConnectedRooms() {
         return connectedRooms;
     }
 
-    public List<NPC> getCharacters() {
+    public Set<NPC> getCharacters() {
+        return characterProbabilities.keySet();
+    }
+
+    public List<NPC> getInRoomCharacters() {
         return characters;
     }
 
@@ -71,13 +85,6 @@ public abstract class Room {
             if (nextCand.getName().equals(name)) return true;
         }
         return false;
-    }
-
-    public NPC getCharacter(String name){
-        for (NPC nextCand : characters) {
-            if (nextCand.getName().equals(name)) return nextCand;
-        }
-        return null;
     }
 
     public void addCharacter(NPC target) {
@@ -105,18 +112,16 @@ public abstract class Room {
         clearItems();
 
         for (NPC character : getCharacters()) {
-            switch (character.getName()) {
-                case "bossy":
-                    if (character.getState() == 1) setCharacterProbability(character, 0.4);
-                    break;
-                case "pj":
-                    if (character.getState() == 1) setCharacterProbability(character, 0.2);
-                    break;
-                case "tow":
-                    if (character.getState() == 1) setCharacterProbability(character, 0.1);
-                    break;
+            Double prob = null;
+            if (character.getState() == 1) {
+                prob = getCharacterProbability(character);
+            } else if (character.equals(startingCharacter)) {
+                prob = 1.0;
+            } else{
+                prob = 0.0;
             }
-            if (RANDOM.nextDouble() < getCharacterProbability(character)){
+
+            if (RANDOM.nextDouble() < prob){
                 addCharacter(character);
                 character.setCurrentRoom(this);
             }

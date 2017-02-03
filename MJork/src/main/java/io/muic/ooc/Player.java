@@ -1,6 +1,7 @@
 package io.muic.ooc;
 
 import io.muic.ooc.items.Backpack;
+import io.muic.ooc.location.Room;
 
 import java.util.Arrays;
 
@@ -11,10 +12,11 @@ public class Player {
     private int preparedness;
     private int energyCap;
     private int energy;
+    private Room currentRoom;
     private Backpack backpack;
 
     public Player() {
-        this.backpack = null;
+        this.backpack = new Backpack(6);
         this.studyExp = 50;
         this.socialExp = 50;
         setPreparedness(0);
@@ -90,6 +92,14 @@ public class Player {
 
     public void setBackpack(Backpack backpack) {
         this.backpack = backpack;
+    }
+
+    public void setCurrentRoom(Room roomCandidate) {
+        currentRoom = roomCandidate;
+    }
+
+    public Room getCurrentRoom() {
+        return currentRoom;
     }
 
     public void printPlayerInfo() {

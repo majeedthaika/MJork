@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class Bossy extends NPC {
 
     public Bossy() {
-        super("bossy", "src/assets/bossy", 0);
+        super("bossy", 0);
     }
 
     public Item updateCurrentResponse() {
@@ -20,7 +20,7 @@ public class Bossy extends NPC {
             case 1:
                 double respProb = super.RANDOM.nextDouble();
                 if (respProb < 0.1) {
-                    gift = new DotaGameAccount();
+                    gift = new DotaGameAccount("dota", null);
                     currentResponse = Arrays.asList("Hey man, you should come #play# <dota< with me when you're free!");
                 } else if (respProb < 0.4) {
                     currentResponse = Arrays.asList("I'm hungry... going to <canteen<");

@@ -1,8 +1,13 @@
 package io.muic.ooc.items;
 
-public abstract class Item {
+public class Item {
     private String name;
     private String description;
+
+    public Item(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
     public String getName() {
         return name;
@@ -12,7 +17,7 @@ public abstract class Item {
         this.name = name;
     }
 
-    public abstract void use();
+//    public abstract void use();
 
     public String stringWithDesc() {
         return name+": "+description;
