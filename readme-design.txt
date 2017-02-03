@@ -1,3 +1,5 @@
+(see both diagram.png and diagram2.png)
+
 I created abstract classes Item, Room, and NPC - each of them are inherited by several subclasses, this is done to avoid repetition and to loosen coupling. I chose not to implement Abstract Factories because I only wanted one instance of each subclass.
 
 I used Command pattern for my Command class and subclasses.
