@@ -5,6 +5,7 @@ import com.diogonunes.jcdp.color.api.Ansi.*;
 import com.google.common.collect.ImmutableMap;
 import io.muic.ooc.characters.*;
 import io.muic.ooc.commands.*;
+import io.muic.ooc.items.Backpack;
 import io.muic.ooc.location.*;
 
 import java.util.Arrays;
@@ -161,9 +162,9 @@ public class GameInstance {
     public void createNPCs(){
         allCharacters = new HashMap<String, NPC>();
 
-        allCharacters.put("mom", new Mom(0));
-        allCharacters.put("bossy", new Bossy(0));
-        allCharacters.put("tow", new Tow(0));
-        allCharacters.put("pj", new PJ(0));
+        allCharacters.put("mom", new Mom());
+        allCharacters.put("bossy", new Bossy());
+        allCharacters.put("tow", new Tow());
+        allCharacters.put("pj", new PJ());
     }
 }

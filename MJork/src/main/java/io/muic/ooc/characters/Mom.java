@@ -1,41 +1,35 @@
 package io.muic.ooc.characters;
 
-import io.muic.ooc.ConsolePrinter;
-import io.muic.ooc.NPC;
+import io.muic.ooc.items.Item;
+import io.muic.ooc.items.Chappati;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class Mom extends NPC {
-    private int state;
-    List<String> currentResponse;
-
-    public Mom(int state) {
-        super("mom", "src/assets/mom");
-        setState(state);
+    public Mom() {
+        super("mom", "src/assets/mom", 0);
     }
 
-    public int getState() {
-        return state;
-    }
-
-    public void setState(int state) {
-        this.state = state;
-        setCurrentResponse(state);
-    }
-
-    public void setCurrentResponse(int option) {
-        switch (option) {
+    public Item updateCurrentResponse() {
+        Item gift = null;
+        switch (getState()) {
             case 0:
-                this.currentResponse = Arrays.asList("PJ's Mom: Get ready quick and #go# to <muic<, otherwise you'll be late to your first day of college!");
+                currentResponse = Arrays.asList("PJ's Mom: Get ready quick and #go# to <muic<, otherwise you'll be late to your first day of college!");
+                break;
+            case 1:
+                double respProb = super.RANDOM.nextDouble();
+                if (respProb < 0.1) {
+                    gift = new Chappati();
+                    currentResponse = Arrays.asList("Beta, #take# this <chappati< and eat it when you're hungry!");
+                } else if (respProb < 0.4) {
+                    currentResponse = Arrays.asList("Sigh... it get lonely being at <home< all the time...");
+                } else {
+                    currentResponse = Arrays.asList("Study hard if you want a good job!");
+                }
                 break;
             default:
-                this.currentResponse = Arrays.asList("I have nothing to say at this time.");
+                currentResponse = Arrays.asList("I have nothing to say at this time.");
         }
-    }
-
-    public void talk(){
-        super.printImage();
-        ConsolePrinter.printWithColor(this.currentResponse);
+        return gift;
     }
 }

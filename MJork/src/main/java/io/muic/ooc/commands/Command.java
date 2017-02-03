@@ -1,4 +1,6 @@
-package io.muic.ooc;
+package io.muic.ooc.commands;
+
+import io.muic.ooc.characters.NPC;
 
 import java.util.List;
 import java.util.Set;

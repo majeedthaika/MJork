@@ -1,5 +1,6 @@
 package io.muic.ooc;
 
+import io.muic.ooc.commands.CommandWords;
 import org.junit.Test;
 
 import java.util.Arrays;

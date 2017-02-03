@@ -1,5 +1,7 @@
 package io.muic.ooc;
 
+import io.muic.ooc.items.Backpack;
+
 import java.util.Arrays;
 
 public class Player {

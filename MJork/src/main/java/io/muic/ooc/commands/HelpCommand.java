@@ -2,7 +2,7 @@ package io.muic.ooc.commands;
 
 
 import io.muic.ooc.ConsolePrinter;
-import io.muic.ooc.NPC;
+import io.muic.ooc.characters.NPC;
 
 import java.util.ArrayList;
 import java.util.List;

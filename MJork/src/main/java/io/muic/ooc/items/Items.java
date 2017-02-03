@@ -1,5 +1,6 @@
-package io.muic.ooc;
+package io.muic.ooc.items;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 public class Items {
@@ -32,7 +33,7 @@ public class Items {
         return items.containsKey(itemName);
     }
 
-    public String[] getAllItemNames() {
-        return (String[]) items.keySet().toArray();
+    public Collection<Item> getItems() {
+        return items.values();
     }
 }

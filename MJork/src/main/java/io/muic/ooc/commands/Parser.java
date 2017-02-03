@@ -1,4 +1,4 @@
-package io.muic.ooc;
+package io.muic.ooc.commands;
 
 import java.util.*;
 

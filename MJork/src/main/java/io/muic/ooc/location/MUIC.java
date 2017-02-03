@@ -1,8 +1,7 @@
 package io.muic.ooc.location;
 
 import io.muic.ooc.ConsolePrinter;
-import io.muic.ooc.NPC;
-import io.muic.ooc.Room;
+import io.muic.ooc.characters.NPC;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,10 +37,14 @@ public class MUIC extends Room {
                 break;
             default:
                 currentResponse = Arrays.asList("This location is weird...");
+                break;
+
         }
     }
 
     public void updateRoom() {
+        clearCharacters();
+        clearItems();
         for (NPC character : getCharacters()) {
             switch (character.getName()) {
                 case "bossy":
@@ -54,6 +57,10 @@ public class MUIC extends Room {
                     if (character.getState() == 1) setCharacterProbability(character, 0.1);
                     break;
             }
+            if (RANDOM.nextDouble() < getCharacterProbability(character)){
+                addCharacter(character);
+                character.setCurrentRoom(this);
+            }
         }
     }
 
@@ -61,6 +68,7 @@ public class MUIC extends Room {
         setRoomMessage(state);
         ConsolePrinter.printWithColor(Arrays.asList("Current Location: <"+getRoomName()+"<"));
         ConsolePrinter.printWithColor(currentResponse);
+        updateRoom();
         if (getState() == 0) setState(1);
     }
 }
